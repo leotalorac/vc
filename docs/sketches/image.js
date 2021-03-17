@@ -11,12 +11,13 @@ function setup(){
   // Create a canvas that's at least the size of the image.
   createCanvas(512, 512);
   // draw the original imaga
-  image(img, 0, 0,height,width);
+  image(img, 0, 40,height,width);
   // apply negative effect
-  effect(img,"negative",250,0)
+  effect(img,"negative",250,40)
   // apply grayscale effect
-  effect(img,"gray",0,250)
-  
+  effect(img,"gray",0,290)
+  // apply grayscale effect
+  effect(img,"grayaverage",250,290)
 }
 // get the negative colors function
 function negative(colors){
@@ -33,6 +34,11 @@ function gray(colors){
   let c = (0.3 * colors[0]) + (0.59 * colors[1]) + (0.11 * colors[2])
   return c 
 }
+function grayaverage(colors){
+  // alternative model to more smooth gray scale
+  let c = (colors[0] + colors[1] + colors[2])/3
+  return c 
+}
 // apply the effect and draw the image
 function effect(img,type,x,y){
   img.loadPixels();
@@ -41,11 +47,16 @@ function effect(img,type,x,y){
       colors = img.get(i,j);      
       if(type =="negative") {
         img.set(i, j,negative(colors));
-      }else{
+      }else if(type=="gray"){
         img.set(i, j,gray(colors));
+      }
+      else{
+        img.set(i, j,grayaverage(colors));
       }
     }
   }
   img.updatePixels();
+  textSize(18)
+  text("image " + type,x,y-20);
   image(img, x, y,height,width);
 }
